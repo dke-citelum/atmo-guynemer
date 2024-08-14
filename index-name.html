@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Dynamique via API Atmosud</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #000; /* Fond de la page en noir */
+            margin: 0;
+        }
+
+        #image-container {
+            width: 256px;  /* Largeur fixée pour le conteneur */
+            height: 384px; /* Hauteur fixée pour le conteneur */
+            overflow: hidden; /* Masque les parties de l'image qui dépassent */
+            background-color: #000; /* Fond noir pour le conteneur */
+        }
+
+        #image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Assure que l'image couvre le conteneur */
+        }
+
+        #filename {
+            color: #fff; /* Couleur du texte en blanc */
+            font-size: 20px; /* Taille du texte à 70 pixels */
+            margin-top: 10px; /* Espacement entre l'image et le texte */
+            text-align: center;
+            word-wrap: break-word; /* Permet de gérer les longs noms de fichier */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="image-container">
+        <!-- L'image sera affichée ici -->
+    </div>
+    <div id="filename"></div> <!-- Conteneur pour le nom du fichier, en dessous de l'image -->
+
+    <script>
+        const apiUrl = 'https://api.atmosud.org/totems/totem/5?imgonly=true&dimension=256x384px';
+        let currentImageUrl = '';
+
+        async function fetchImage() {
+            try {
+                // Interroger l'API pour obtenir l'URL de l'image
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la requête: ' + response.statusText);
+                }
+
+                // Lire la réponse en tant que texte
+                let imageUrl = await response.text();
+
+                // Supprimer les guillemets s'il y en a
+                imageUrl = imageUrl.replace(/"/g, '').trim();
+
+                // Extraire le nom du fichier de l'URL
+                const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+                // Mettre à jour l'image et le nom du fichier si l'URL a changé
+                if (currentImageUrl !== imageUrl) {
+                    currentImageUrl = imageUrl;
+                    document.getElementById('image-container').innerHTML = `<img src="${imageUrl}" alt="Image dynamique">`;
+                    document.getElementById('filename').textContent = filename;
+                }
+
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Vérifier les mises à jour toutes les 30 secondes
+        setInterval(fetchImage, 30000);
+
+        // Charger l'image au démarrage
+        fetchImage();
+
+    </script>
+
+</body>
+</html>
