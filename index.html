@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image dynamique via API Atmosud</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        #image-container {
+            text-align: center;
+        }
+
+        #image-container img {
+            border: 2px solid #ccc;
+            padding: 10px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="image-container">
+        <!-- L'image sera insérée ici par JavaScript -->
+    </div>
+
+    <script>
+        const apiUrl = 'https://api.atmosud.org/totems/totem/5?imgonly=true&dimension=256x384px';
+
+        async function fetchImage() {
+            try {
+                // Interroger l'API pour obtenir l'URL de l'image
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la requête');
+                }
+
+                // Lire la réponse en tant que texte
+                let imageUrl = await response.text();
+
+                // Supprimer les guillemets s'il y en a
+                imageUrl = imageUrl.replace(/"/g, '');
+
+                // Mettre à jour l'image dans le conteneur
+                document.getElementById('image-container').innerHTML = `<img src="${imageUrl.trim()}" alt="Image dynamique">`;
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                // En cas d'erreur, vous pouvez afficher un message ou garder le conteneur vide
+                document.getElementById('image-container').innerHTML = '<p>Erreur lors du chargement de l\'image.</p>';
+            }
+        }
+
+        // Charger l'image au démarrage
+        fetchImage();
+
+        // Rafraîchir l'image automatiquement toutes les 14 secondes
+        setInterval(fetchImage, 14000); // 14000 ms = 14 secondes
+
+    </script>
+
+</body>
+</html>
