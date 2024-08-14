@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image dynamique via API Atmosud</title>
+    <title>Image Dynamique via API Atmosud</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #000; /* Fond de la page en noir */
             margin: 0;
         }
 
@@ -21,9 +21,11 @@
         }
 
         #image-container img {
-            border: 0px solid #ccc;
-            padding: 0px;
-            background-color: white;
+            border: none; /* Suppression du cadre de l'image */
+            padding: 0; /* Suppression du padding de l'image */
+            background-color: transparent; /* Fond transparent pour l'image */
+            max-width: 100%; /* Assure que l'image s'adapte à la taille du conteneur */
+            height: auto; /* Maintient le ratio de l'image */
         }
     </style>
 </head>
