@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image dynamique via API Atmosud</title>
+    <title>Image Dynamique via API Atmosud</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,59 +12,64 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f0f0f0;
             margin: 0;
+            background-color: #000; /* Fond de la page en noir */
         }
 
         #image-container {
+            margin-top: 20px;
             text-align: center;
         }
 
         #image-container img {
-            border: 2px solid #ccc;
-            padding: 10px;
-            background-color: white;
+            max-width: 100%; /* Assure que l'image s'adapte à la taille du conteneur */
+            height: auto; /* Maintient le ratio de l'image */
+            border: none; /* Supprime la bordure */
+            padding: 0; /* Supprime le padding */
+            background-color: transparent; /* Assure que le fond de l'image est transparent */
         }
     </style>
 </head>
 <body>
 
     <div id="image-container">
-        <!-- L'image sera insérée ici par JavaScript -->
+        <!-- L'image sera affichée ici -->
     </div>
 
     <script>
         const apiUrl = 'https://api.atmosud.org/totems/totem/5?imgonly=true&dimension=256x384px';
+        let currentImageUrl = '';
 
         async function fetchImage() {
             try {
                 // Interroger l'API pour obtenir l'URL de l'image
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
-                    throw new Error('Erreur lors de la requête');
+                    throw new Error('Erreur lors de la requête: ' + response.statusText);
                 }
 
                 // Lire la réponse en tant que texte
                 let imageUrl = await response.text();
 
                 // Supprimer les guillemets s'il y en a
-                imageUrl = imageUrl.replace(/"/g, '');
+                imageUrl = imageUrl.replace(/"/g, '').trim();
 
-                // Mettre à jour l'image dans le conteneur
-                document.getElementById('image-container').innerHTML = `<img src="${imageUrl.trim()}" alt="Image dynamique">`;
+                // Mettre à jour l'image si l'URL a changé
+                if (currentImageUrl !== imageUrl) {
+                    currentImageUrl = imageUrl;
+                    document.getElementById('image-container').innerHTML = `<img src="${imageUrl}" alt="Image dynamique">`;
+                }
 
             } catch (error) {
                 console.error('Erreur:', error);
-                // En cas d'erreur, vous pouvez afficher un message ou garder le conteneur vide
-                document.getElementById('image-container').innerHTML = '<p>Erreur lors du chargement de l\'image.</p>';
             }
         }
 
+        // Vérifier les mises à jour toutes les 30 secondes
+        setInterval(fetchImage, 30000);
+
         // Charger l'image au démarrage
         fetchImage();
-
-        // Rafraîchir l'image automatiquement toutes les 17 secondes
-        setInterval(fetchImage, 17000); // 17000 ms = 17 secondes
 
     </script>
 
