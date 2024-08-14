@@ -18,20 +18,18 @@
 
         #image-container {
             width: 256px;  /* Largeur fixée pour le conteneur */
-            height: 386px; /* Hauteur fixée pour le conteneur */
+            height: 384px; /* Hauteur fixée pour le conteneur */
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden; /* Masque les parties de l'image qui dépassent */
+            background-color: #000; /* Fond noir pour le conteneur */
         }
 
         #image-container img {
-            width: 100%;  /* L'image prend toute la largeur du conteneur */
-            height: 100%; /* L'image prend toute la hauteur du conteneur */
-            object-fit: cover; /* L'image couvre entièrement le conteneur sans déformation */
-            border: none; /* Suppression du cadre de l'image */
-            padding: 0; /* Suppression du padding de l'image */
-            background-color: transparent; /* Fond transparent pour l'image */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Assure que l'image couvre le conteneur */
         }
     </style>
 </head>
